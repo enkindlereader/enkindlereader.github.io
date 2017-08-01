@@ -38,7 +38,7 @@ class Player {
             that.updateProgressBar();
         });
         this.playButton.addEventListener('click', function(){
-            that.enkindleController.isPlaying = !that.enkindleController.isPlaying;
+            that.togglePlay();
         });
         this.increaseSpeedButton.addEventListener('click', function(){
             that.enkindleController.lineReader.changeSpeed(10);
@@ -46,6 +46,11 @@ class Player {
         this.decreaseSpeedButton.addEventListener('click', function(){
             that.enkindleController.lineReader.changeSpeed(-10);
         });
+    }
+
+    togglePlay()
+    {
+        this.enkindleController.isPlaying = !this.enkindleController.isPlaying;
     }
 
     redrawProgressBar() {

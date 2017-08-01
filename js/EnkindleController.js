@@ -55,6 +55,12 @@ class EnkindleController {
         $(this.bookLoader.getDom()).toggle();
         $(this.contextManager.getDom()).toggle();
 
+        document.body.onkeyup = function(e){
+            if(e.keyCode == 32){
+                that.player.togglePlay();
+            }
+        }
+
         this.lineReader.play();
     }
 
