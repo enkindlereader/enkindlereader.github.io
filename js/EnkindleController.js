@@ -59,7 +59,7 @@ class EnkindleController {
             if(e.keyCode == 32){
                 that.player.togglePlay();
             }
-        }
+        };
 
         this.lineReader.play();
     }

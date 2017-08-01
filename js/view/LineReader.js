@@ -26,10 +26,32 @@ class LineReader
         this.wordTimeout = 60000.0 / this.speedWordsPerMinute;
     }
 
+    sanitizeText(text)
+    {
+        /*console.log(text);
+        let sanitizedText = text.replace(/\n/mg, ' ')
+                                .replace(/\t/mg, ' ')
+                                .replace(/  /mg, ' ')
+                                .replace(/[^\x20-\x7E]+/g, '')
+                                .replace(/^ \/g, '')
+                                .replace(/ *$/g, '');
+        console.log(sanitizedText);*/
+        return text;
+    }
+
+    sanitizeTextArray(textArray){
+        for(let index in textArray){
+            if ((typeof textArray[index]) !== 'string'){
+                textArray[index] = ' ';
+            }
+        }
+        return textArray;
+    }
+
     load(text)
     {
-        this.text = text;
-        this.textArray = text.split(' ');
+        this.text = this.sanitizeText(text);
+        this.textArray = this.sanitizeTextArray(text.split(' '));
         if (this.enkindleController.position > this.textArray.length)
         {
             this.enkindleController.position = 0;
@@ -54,6 +76,9 @@ class LineReader
             let leadingLetters = 40;
             let trailingLetters = 70;
             let word = this.textArray[position];
+            if (!(word.length > 0)){
+                word = '_';
+            }
             let wordShift = 1;
             while((position+wordShift < this.textArray.length) && (wordShift < this.enkindleController.words))
             {
