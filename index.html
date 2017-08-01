@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>EnkindleReader</title>
+
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="author" content="Aleksander Gajewski"/>
+
+    <link rel="icon" type="image/png" href="/img/icon.png"/>
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/ui-lightness/jquery-ui-1.10.4.custom.min.css" type="text/css"/>
+
+    <script src="/deps/jquery.1.11.1.min.js" type="text/javascript"></script>
+    <script src="/deps/jquery-ui.1.12.0.min.js" type="text/javascript"></script>
+    <script src="/deps/semantic-ui/semantic.js" type="text/javascript"></script>
+    <script src="/deps/semantic-ui-range.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="/deps/semantic-ui-range.css" type="text/css"/>
+
+    <link rel="stylesheet" href="/deps/semantic-ui/semantic.min.css" type="text/css"/>
+    <script type="text/javascript" src="/deps/semantic-ui/semantic.min.js"></script>
+
+    <script type="text/javascript" src="/deps/trianglify.min.js"></script>
+
+    <script type="text/javascript" src="/js/utils/ContextManager.js"></script>
+    <script type="text/javascript" src="/js/utils/DelayAction.js"></script>
+    <script type="text/javascript" src="/js/utils/HTML.js"></script>
+    <script type="text/javascript" src="/js/utils/StdLib.js"></script>
+    <script type="text/javascript" src="/js/utils/String.js"></script>
+
+
+    <script type="text/javascript" src="/js/view/LineReader.js"></script>
+    <script type="text/javascript" src="/js/view/Player.js"></script>
+    <script type="text/javascript" src="/js/view/BookLoader.js"></script>
+
+    <script type="text/javascript" src="/js/EnkindleController.js"></script>
+
+    <script type="text/javascript">
+        function bootstrap()
+        {
+            let enkindleController = new EnkindleController();
+        }
+    </script>
+
+</head>
+
+<body onload="bootstrap();">
+</body>
+</html>
