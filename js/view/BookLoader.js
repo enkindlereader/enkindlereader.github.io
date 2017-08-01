@@ -46,7 +46,7 @@ class BookLoader {
                 alert('Please upload a file before continuing')
             }
         });
-        this.urlInput.value = 'http://enkindle.brainfuck.pl/books/CrimeAndPunishment.txt';
+        this.urlInput.value = 'http://enkindlereader.github.io/books/CrimeAndPunishment.txt';
         this.loadUrlButton.addEventListener('click',
             function(){
                 let url = that.urlInput.value;
