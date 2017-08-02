@@ -1,32 +1,32 @@
 // This file is a part of EnkindleReader project.
 // Copyright (c) 2017 Aleksander Gajewski <adiog@brainfuck.pl>.
 
-class BookLoader {
+class LoaderComponent {
     constructor(enkindleController) {
         let that = this;
         this.enkindleController = enkindleController;
 
-        this.dom = $$(div({class: 'ui segment', style: 'position: absolute; top: 2%; left: 5%; width: 40%;'}),
+        this.dom = $$(div({class: 'ui segment', style: 'width: 100%;'}),
             $$(table({style: 'width: 100%'}),
                 $$(tr(),
                     $$(td({style: 'width: 20%'}), $$$(span(), 'Paste text:')),
                     $$(td({style: 'width: 50%'}), this.rawInput = input({type: 'text', style: 'width: 95%'})),
-                    $$(td({style: 'width: 30%'}), this.rawInputButton = $$$(button({style: 'width: 100%'}), 'load pasted text'))
+                    $$(td({style: 'width: 30%'}), this.rawInputButton = $$$(button({class: 'ui basic button', style: 'width: 100%'}), 'load pasted text'))
                 ),
                 $$(tr(),
                     $$(td(), $$$(span(), 'Provide URL:')),
                     $$(td(), this.urlInput = $$(input({type: 'text', style: 'width: 95%'}))),
-                    $$(td(), this.loadUrlButton = $$$(button({style: 'width: 100%'}), 'load text from url'))
+                    $$(td(), this.loadUrlButton = $$$(button({class: 'ui basic button', style: 'width: 100%'}), 'load text from url'))
                 ),
                 $$(tr(),
                     $$(td(), $$$(span(), 'Upload file:')),
                     $$(td(), this.fileInput = $$(input({type: 'file'}))),
-                    $$(td(), this.loadButton = $$$(button({style: 'width: 100%'}), 'load text from disk'))
+                    $$(td(), this.loadButton = $$$(button({class: 'ui basic button', style: 'width: 100%'}), 'load text from disk'))
                 )
             )
         );
         this.rawInputButton.addEventListener('click', function () {
-            that.enkindleController.lineReader.load(that.rawInput.value);
+            that.load(that.rawInput.value);
         });
         this.loadButton.addEventListener('click', function () {
             if (!window.FileReader) {
@@ -53,7 +53,7 @@ class BookLoader {
                 $.ajax({
                     dataType : 'text',
                     url : url,
-                    success : function(text) { that.enkindleController.lineReader.load(text); },
+                    success : function(text) { that.load(text); },
                     async : false
                 });
             });
@@ -66,8 +66,16 @@ class BookLoader {
         if (file && file.length) {
             results = file.replace(/\n/g, ' ');
             console.log(results);
-            this.enkindleController.lineReader.load(results);
+            this.load(results);
         }
+    }
+
+    load(text)
+    {
+        this.enkindleController.text = text;
+        this.enkindleController.storeText();
+        this.enkindleController.lineReaderComponent.load(this.enkindleController.text);
+
     }
 
     getDom()

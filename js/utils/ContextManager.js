@@ -2,20 +2,17 @@
 // Copyright (c) 2017 Aleksander Gajewski <adiog@brainfuck.pl>.
 
 class ContextManager {
-    constructor(enkindleController, defaultContext) {
+    constructor(enkindleController, defaultSettings, defaultText, defaultContext) {
         let that = this;
 
         this.enkindleController = enkindleController;
 
-        this.loadCallbackCollection = [];
-        this.saveCallbackCollection = [];
-
-        this.refreshCallback = null;
-
-        this.defaultKey = '(default)';
+        this.defaultKey = 'EnkindleReader (default)';
+        this.defaultSettings = defaultSettings;
         this.defaultContext = defaultContext;
+        this.defaultText = defaultText;
 
-        this.restoreContext();
+        this.restoreLocalStorage();
 
         this.dom = this.buildDom();
 
@@ -31,20 +28,17 @@ class ContextManager {
         this.deleteButton.addEventListener('click', function () {
             that.deleteButtonCallback();
         });
-        //this.resetButton.addEventListener('click', function () {
-        //    that.resetButtonCallback()
-        //});
-    }
-
-    setRefreshCallback(refreshCallback) {
-        this.refreshCallback = refreshCallback;
+        this.resetButton.addEventListener('click', function () {
+            that.resetButtonCallback()
+        });
     }
 
     buildDom() {
-        let dom = $$(div({class: 'ui segment', style: 'position: absolute; top: 5%; left: 55%; width: 40%'}),
+        let dom = $$(div({class: 'ui segment', style: 'width: 100%'}),
                 $$(div(),
                     $$$(span(), 'Current reading context: '),
-                    this.keyLabel = span({align: 'center', style: 'width: 100%; font-size: 1.1em; text-align: center; font-weight: bold;'})
+                    this.keyLabel = span({align: 'center', style: 'width: 100%; font-size: 1.1em; text-align: center; font-weight: bold;'}),
+                    $$(this.resetButton = $$$(button({class: 'ui right floated basic negative button'}), 'reset'))
                 ),
                 $$(table({style: 'width: 100%'}),
                     $$(tr(),
@@ -52,10 +46,10 @@ class ContextManager {
                             this.select = select({style: 'width: 100%;'})
                         ),
                         $$(td({style: 'width: 25%'}),
-                            $$(this.loadButton = $$$(button({style: 'width: 100%'}), 'load'))
+                            $$(this.loadButton = $$$(button({class: 'ui basic button', style: 'width: 100%'}), 'load'))
                         ),
                         $$(td({style: 'width: 25%'}),
-                            $$(this.deleteButton = $$$(button({style: 'width: 100%'}), 'delete'))
+                            $$(this.deleteButton = $$$(button({class: 'ui basic button', style: 'width: 100%'}), 'delete'))
                         )
                     ),
                     $$(tr(),
@@ -63,15 +57,14 @@ class ContextManager {
                             this.newLabel = input({style: 'width: 90%;', type: 'text'})
                         ),
                         $$(td({style: 'width: 25%'}),
-                            $$(this.saveasButton = $$$(button({style: 'width: 100%; font-size: 0.9em;'}), 'save as'))
+                            $$(this.saveasButton = $$$(button({class: 'ui basic button', style: 'width: 100%; font-size: 0.9em;'}), 'save as'))
                         ),
                         $$(td({style: 'width: 25%'}),
-                            $$(this.renameButton = $$$(button({style: 'width: 100%'}), 'rename'))
+                            $$(this.renameButton = $$$(button({class: 'ui basic button', style: 'width: 100%'}), 'rename'))
                         )
                     )
-                )
+                ),
         );
-            //$$(this.resetButton = $$$(button(), 'reset'))
 
         this.updateDom();
 
@@ -107,39 +100,6 @@ class ContextManager {
 
     getDom() {
         return this.dom;
-    }
-
-    refresh() {
-        if (this.refreshCallback !== null) {
-            this.refreshCallback();
-        }
-    }
-
-    onCallback(callbackCollection) {
-        let that = this;
-        callbackCollection.every(function (callback) {
-            callback(that.context);
-        });
-    }
-
-    onLoad() {
-        this.onCallback(this.loadCallbackCollection);
-    }
-
-    onSave() {
-        this.onCallback(this.saveCallbackCollection);
-    }
-
-    registerOnLoadCallback(callback) {
-        this.loadCallbackCollection.push(callback);
-    }
-
-    registerOnSaveCallback(callback) {
-        this.saveCallbackCollection.push(callback);
-    }
-
-    getContext() {
-        return this.context;
     }
 
     loadButtonCallback() {
@@ -201,48 +161,78 @@ class ContextManager {
     }
 
     resetButtonCallback() {
-        if (confirm("Proceed with reseting context?")) {
+        if (confirm('This action will delete all books that have been uploaded. Continue?')) {
             this.resetLocalStorage();
             location.reload();
         }
     }
 
-    restoreContext() {
+    storeText(text)
+    {
+        if (this.enkindleController.isLoaded) {
+            this.textCollection[this.selectedKey] = text;
+            localStorage.textCollection = JSON.stringify(this.textCollection);
+        }
+    }
+
+    restoreText()
+    {
+        return this.textCollection[this.selectedKey];
+    }
+
+    storeContext(context){
+        if (this.enkindleController.isLoaded) {
+            this.contextCollection[this.selectedKey] = copy(context);
+            localStorage.contextCollection = JSON.stringify(this.contextCollection);
+        }
+    }
+
+    restoreContext()
+    {
+        return copy(this.contextCollection[this.selectedKey]);
+    }
+
+    storeSettings(settings){
+        if (this.enkindleController.isLoaded) {
+            this.settings = copy(settings);
+            localStorage.settings = JSON.stringify(settings);
+        }
+    }
+
+    restoreSettings()
+    {
+        return copy(this.settings);
+    }
+
+    restoreLocalStorage() {
         if (typeof(Storage) !== "undefined") {
-            if (localStorage.contextCollection) {
-                this.contextCollection = JSON.parse(localStorage.contextCollection);
+            if (localStorage.selectedKey) {
                 this.selectedKey = localStorage.selectedKey;
-                this.context = copy(this.contextCollection[this.selectedKey]);
+                this.settings = JSON.parse(localStorage.settings);
+                this.textCollection = JSON.parse(localStorage.textCollection);
+                this.contextCollection = JSON.parse(localStorage.contextCollection);
             }
             else {
                 this.selectedKey = this.defaultKey;
-                this.context = copy(this.defaultContext);
+                this.settings = this.defaultSettings;
+                this.textCollection = {};
+                this.textCollection[this.selectedKey] = this.defaultText;
                 this.contextCollection = {};
-                this.contextCollection[this.selectedKey] = copy(this.context);
+                this.contextCollection[this.selectedKey] = this.defaultContext;
+
+                this.storeLocalStorage(true);
             }
         }
-
-        this.onLoad();
     }
 
-    storeContext() {
-        this.onSave();
-
-        this.contextCollection[this.selectedKey] = copy(this.context);
-        if (typeof(Storage) !== "undefined") {
-            localStorage.contextCollection = JSON.stringify(this.contextCollection);
+    storeLocalStorage(force){
+        if ((this.enkindleController.isLoaded || force) && (typeof(Storage) !== "undefined")) {
             localStorage.selectedKey = this.selectedKey;
+            localStorage.textCollection = JSON.stringify(this.textCollection);
+            localStorage.contextCollection = JSON.stringify(this.contextCollection);
+            localStorage.settings = JSON.stringify(this.settings);
         }
     }
-
-    storeLibrary() {
-
-    }
-
-    restoreLibrary() {
-        this.libraryCollection[this.selectedKey] = this.enkindleController.lineReader.text;
-    }
-
 
     resetLocalStorage() {
         if (typeof(Storage) !== "undefined") {

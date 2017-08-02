@@ -1,29 +1,29 @@
 // This file is a part of EnkindleReader project.
 // Copyright (c) 2017 Aleksander Gajewski <adiog@brainfuck.pl>.
 
-class LineReader
+class LineReaderComponent
 {
     constructor(enkindleController)
     {
         this.enkindleController = enkindleController;
 
-        this.dom = $$(div({style: 'position: absolute; top: 40%; left: 10%; width: 80%; font-family: monospace; padding: 0.5em; border-top: 1px solid black; border-bottom: 1px solid black;'}),
+        this.dom = $$(div({style: 'position: absolute; z-index: -1; top: 40%; left: 10%; width: 80%; font-family: monospace; padding: 0.5em; border-top: 1px solid black; border-bottom: 1px solid black;'}),
             this.leadingLetters = span({style: 'color: lightgray;'}),
             this.leadingWord = span({style: 'color: black;'}),
-            this.centerLetter = span({style: 'color: red;'}),
+            this.centerLetter = span({style: 'color: darkorange;'}),
             this.trailingWord = span({style: 'color: black;'}),
             this.trailingLetters = span({style: 'color: lightgray;'})
         );
-        this.speedWordsPerMinute = 300.0;
         this.recalculateSpeed();
         this.inactiveTimeout = 1000;
         this.spaces = Array(99).join(' ');
+
 
         this.textArray = [];
     }
 
     recalculateSpeed() {
-        this.wordTimeout = 60000.0 / this.speedWordsPerMinute;
+        this.wordTimeout = 60000.0 / this.enkindleController.context.speed;
     }
 
     sanitizeText(text)
@@ -52,12 +52,8 @@ class LineReader
     {
         this.text = this.sanitizeText(text);
         this.textArray = this.sanitizeTextArray(text.split(' '));
-        if (this.enkindleController.position > this.textArray.length)
-        {
-            this.enkindleController.position = 0;
-        }
-        this.enkindleController.player.redrawProgressBar();
-        this.enkindleController.player.refreshTime();
+        this.enkindleController.playerComponent.redrawProgressBar();
+        this.enkindleController.playerComponent.refreshTime();
     }
 
     underscore(letter){
@@ -73,8 +69,10 @@ class LineReader
     {
         let position = positionArg;
         if (position < this.textArray.length) {
-            let leadingLetters = 40;
-            let trailingLetters = 70;
+            this.enkindleController.context.position = position;
+
+            let leadingLetters = this.enkindleController.settings.radius;
+            let trailingLetters = Math.round(1.5 * leadingLetters);
             let word = this.textArray[position];
             if (!(word.length > 0)){
                 word = '_';
@@ -104,7 +102,6 @@ class LineReader
         {
             this.postPlay();
         }
-        //console.log(paddingFront + '|' + leadingWord + word[highlightedLetterPostition] + trailingWord + '|' + this.trailingLetters.innerHTML);
     }
 
     isInBounds(position)
@@ -140,10 +137,9 @@ class LineReader
 
         if ((this.enkindleController.isPlaying) && (this.enkindleController.position < this.textArray.length))
         {
-            this.enkindleController.player.updateProgressBar();
+            this.enkindleController.playerComponent.updateProgressBar();
             this.refresh(this.enkindleController.position);
-            this.enkindleController.player.refreshTime();
-            //console.log('A', this.enkindleController.position);
+            this.enkindleController.playerComponent.refreshTime();
             setTimeout(function(){that.enkindleController.position += 1; that.play();}, this.wordTimeout);
         }
         else
@@ -152,17 +148,17 @@ class LineReader
                 this.postPlay();
             }
             this.enkindleController.isPlaying = false;
-            //console.log('B', this.enkindleController.position);
             setTimeout(function(){that.play();}, this.inactiveTimeout);
         }
     }
 
     changeSpeed(relativeSpeed)
     {
-        this.speedWordsPerMinute += relativeSpeed;
-        this.enkindleController.player.speedLabel.innerHTML = this.speedWordsPerMinute + 'wpm';
+        this.enkindleController.context.speed += relativeSpeed;
+        this.enkindleController.playerComponent.speedLabel.innerHTML = this.enkindleController.context.speed + 'wpm';
         this.recalculateSpeed();
-        this.enkindleController.player.refreshTime();
+        this.enkindleController.playerComponent.refreshTime();
+        this.enkindleController.storeContext();
     }
 
     postPlay()
@@ -176,7 +172,6 @@ class LineReader
         this.leadingWord.innerHTML = '';
         this.centerLetter.innerHTML = '';
         this.trailingWord.innerHTML = '';
-        //this.trailingLetters.innerHTML = '';
         this.trailingLetters.innerHTML = post;
     }
 
