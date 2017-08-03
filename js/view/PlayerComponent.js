@@ -22,7 +22,7 @@ class PlayerComponent {
         this.playerDom =
             $$(div({class: 'ui segment', style: 'width: 100%'}),
                     this.fastBackwardButton = IconBasicButton('fast backward'), //$$(div({class: 'ui button'}), i({class: 'fast backward icon'})),
-                    this.playButton = IconBasicButton('play'), //$$(div({class: 'ui button'}), i({class: 'play icon'})),
+                    this.playButton = LabeledIconButton('play', 'Play', null, 'basic'), //$$(div({class: 'ui button'}), i({class: 'play icon'})),
                     this.decreaseSpeedButton = IconBasicButton('minus'), ///$$(button({class: 'ui button'}), i({class: 'minus icon'})),
                     $$(div({class: 'ui basic button'}), this.speedLabel = span()),
                     this.increaseSpeedButton = IconBasicButton('plus'), //$$(div({class: 'ui button'}), i({class: 'plus icon'})),

@@ -107,38 +107,33 @@ class ContextManager {
         let option = this.select.options[selectedIndex];
         let key = option.value;
 
-        this.context = copy(this.contextCollection[key]);
+        this.storeLocalStorage(true);
         this.selectedKey = key;
-        this.keyLabel.value = key;
-
-        this.onLoad();
-
-        this.storeContext();
-        this.updateDom();
-        this.refresh();
+        this.storeLocalStorage(true);
+        location.reload();
     }
 
     saveasButtonCallback() {
         let newKey = this.newLabel.value;
         if ((newKey !== '') && (newKey !== this.defaultKey)) {
-            this.onSave();
+            this.contextCollection[newKey] = copy(this.contextCollection[this.selectedKey]);
+            this.textCollection[newKey] = this.textCollection[this.selectedKey];
             this.selectedKey = newKey;
-            this.storeContext();
-            this.updateDom();
-            this.refresh();
+            this.storeLocalStorage(true);
+            location.reload();
         }
     }
 
     renameButtonCallback() {
         let newKey = this.newLabel.value;
         if ((this.selectedKey !== this.defaultKey) && (newKey !== '') && (newKey !== this.defaultKey)) {
-            this.onSave();
-            this.contextCollection[newKey] = copy(this.context);
+            this.contextCollection[newKey] = copy(this.contextCollection[this.selectedKey]);
             delete this.contextCollection[this.selectedKey];
+            this.textCollection[newKey] = this.textCollection[this.selectedKey];
+            delete this.textCollection[this.selectedKey];
             this.selectedKey = newKey;
-            this.storeContext();
-            this.updateDom();
-            this.refresh();
+            this.storeLocalStorage(true);
+            location.reload();
         }
     }
 
@@ -150,12 +145,10 @@ class ContextManager {
         if (key !== this.defaultKey) {
             if (confirm("Proceed with deleting context?")) {
                 delete this.contextCollection[this.selectedKey];
+                delete this.textCollection[this.selectedKey];
                 this.selectedKey = this.defaultKey;
-                this.context = copy(this.contextCollection[this.defaultKey]);
-
-                this.storeContext();
-                this.updateDom();
-                this.refresh();
+                this.storeLocalStorage(true);
+                location.reload();
             }
         }
     }
