@@ -121,9 +121,10 @@ class EnkindleController {
                 that.playerComponent.togglePlay();
             }
         };
+        /*
         document.body.ontouchend = function (e) {
             that.playerComponent.togglePlay();
-        };
+        };*/
     }
 
     hasBookmarks() {
