@@ -199,7 +199,7 @@ class ContextManager {
 
     restoreLocalStorage() {
         if (typeof(Storage) !== "undefined") {
-            if (localStorage.selectedKey) {
+            if ((localStorage.selectedKey) && (localStorage.contextCollection) && (localStorage.textCollection)) {
                 this.selectedKey = localStorage.selectedKey;
                 this.settings = JSON.parse(localStorage.settings);
                 this.textCollection = JSON.parse(localStorage.textCollection);
