@@ -1,6 +1,8 @@
+// This file is a part of EnkindleReader project.
+// Copyright (c) 2017 Aleksander Gajewski <adiog@brainfuck.pl>.
+
 class Bookmark {
-    constructor(enkindleController, label, position)
-    {
+    constructor(enkindleController, label, position) {
         let that = this;
 
         this.enkindleController = enkindleController;
@@ -13,22 +15,23 @@ class Bookmark {
             this.trash = i({class: 'delete icon'})
         );
 
-        this.trash.addEventListener('click', function(){that.removeBookmark();});
-        this.icon.addEventListener('click', function(){that.setPosition();});
+        this.trash.addEventListener('click', function () {
+            that.removeBookmark();
+        });
+        this.icon.addEventListener('click', function () {
+            that.setPosition();
+        });
     }
 
-    getDom()
-    {
+    getDom() {
         return this.dom;
     }
 
-    setPosition()
-    {
+    setPosition() {
         this.enkindleController.setPosition(this.position);
     }
 
-    removeBookmark()
-    {
+    removeBookmark() {
         this.dom.parentNode.removeChild(this.dom);
         this.enkindleController.removeBookmark(this.label);
     }

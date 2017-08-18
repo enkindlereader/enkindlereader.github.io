@@ -9,23 +9,17 @@ class PlayerComponent {
 
         this.dom =
             $$(div({class: 'ui segment', style: 'width: 100%'}),
-                this.fastBackwardButton = IconBasicButton('fast backward'),
-                this.playButton = LabeledIconButton('play', 'Play', null, 'basic'),
-                this.decreaseSpeedButton = IconBasicButton('minus'),
-                $$(div({class: 'ui basic button'}), this.speedLabel = span()),
-                this.increaseSpeedButton = IconBasicButton('plus'),
-                $$(div({class: 'ui basic button'}), this.timeLabel = span())
+                this.fastBackwardButton = Button('fast backward'),
+                this.playButton = Button('play'),
+                this.decreaseSpeedButton = Button('minus'),
+                this.speedLabel = Button('speed'),
+                this.increaseSpeedButton = Button('plus'),
+                this.timeLabel = Button('time')
             );
 
-        this.progressDom =
-            $$(div({class: 'ui segment', style: 'width: 100%'}),
-                this.progressBar = div({class: 'ui range'})
-            );
-
-        this.redrawProgressBar();
         this.fastBackwardButton.addEventListener('click', function () {
-            that.enkindleController.position = 0;
-            that.updateProgressBar();
+            that.enkindleController.context.position = 0;
+            that.enkindleController.doSetPosition(0);
         });
 
         this.playButton.addEventListener('click', function () {
@@ -51,7 +45,9 @@ class PlayerComponent {
     }
 
     redrawProgressBar() {
-        let that = this;
+        //let that = this;
+        //that.enkindleController.doSetPosition(this.enkindleController.context.position);
+        /*
         $(this.progressBar).range({
             min: 0,
             max: that.enkindleController.lineReaderComponent.textArray.length,
@@ -62,7 +58,7 @@ class PlayerComponent {
                     that.enkindleController.doSetPosition(value);
                 }
             }
-        });
+        });*/
     }
 
     updateTimeButton() {
@@ -72,6 +68,8 @@ class PlayerComponent {
     }
 
     updateProgressBar(position) {
-        $(this.progressBar).range('set value', this.enkindleController.context.position);
+        //$(this.progressBar).range('set value', this.enkindleController.context.position);
+        this.enkindleController.doSetPosition(position);
+
     }
 }

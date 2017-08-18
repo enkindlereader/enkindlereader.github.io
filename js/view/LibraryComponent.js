@@ -1,7 +1,7 @@
 // This file is a part of EnkindleReader project.
 // Copyright (c) 2017 Aleksander Gajewski <adiog@brainfuck.pl>.
 
-class ContextManager {
+class LibraryComponent {
     constructor(enkindleController, defaultSettings, defaultText, defaultContext) {
         let that = this;
 
@@ -35,35 +35,41 @@ class ContextManager {
 
     buildDom() {
         let dom = $$(div({class: 'ui segment', style: 'width: 100%'}),
-                $$(div(),
-                    $$$(span(), 'Current reading context: '),
-                    this.keyLabel = span({align: 'center', style: 'width: 100%; font-size: 1.1em; text-align: center; font-weight: bold;'}),
-                    $$(this.resetButton = $$$(button({class: 'ui right floated basic negative button'}), 'reset'))
-                ),
-                $$(table({style: 'width: 100%'}),
-                    $$(tr(),
-                        $$(td({style: 'width: 50%'}),
-                            this.select = select({style: 'width: 100%;'})
-                        ),
-                        $$(td({style: 'width: 25%'}),
-                            $$(this.loadButton = $$$(button({class: 'ui basic button', style: 'width: 100%'}), 'load'))
-                        ),
-                        $$(td({style: 'width: 25%'}),
-                            $$(this.deleteButton = $$$(button({class: 'ui basic button', style: 'width: 100%'}), 'delete'))
-                        )
+            $$(div(),
+                $$$(span(), 'Current reading context: '),
+                this.keyLabel = span({
+                    align: 'center',
+                    style: 'width: 100%; font-size: 1.1em; text-align: center; font-weight: bold;'
+                }),
+                $$(this.resetButton = $$$(button({class: 'ui right floated basic negative button'}), 'reset'))
+            ),
+            $$(table({style: 'width: 100%'}),
+                $$(tr(),
+                    $$(td({style: 'width: 50%'}),
+                        this.select = select({style: 'width: 100%;'})
                     ),
-                    $$(tr(),
-                        $$(td({style: 'width: 50%'}),
-                            this.newLabel = input({style: 'width: 90%;', type: 'text'})
-                        ),
-                        $$(td({style: 'width: 25%'}),
-                            $$(this.saveasButton = $$$(button({class: 'ui basic button', style: 'width: 100%; font-size: 0.9em;'}), 'save as'))
-                        ),
-                        $$(td({style: 'width: 25%'}),
-                            $$(this.renameButton = $$$(button({class: 'ui basic button', style: 'width: 100%'}), 'rename'))
-                        )
+                    $$(td({style: 'width: 25%'}),
+                        $$(this.loadButton = $$$(button({class: 'ui basic button', style: 'width: 100%'}), 'load'))
+                    ),
+                    $$(td({style: 'width: 25%'}),
+                        $$(this.deleteButton = $$$(button({class: 'ui basic button', style: 'width: 100%'}), 'delete'))
                     )
                 ),
+                $$(tr(),
+                    $$(td({style: 'width: 50%'}),
+                        this.newLabel = input({style: 'width: 90%;', type: 'text'})
+                    ),
+                    $$(td({style: 'width: 25%'}),
+                        $$(this.saveasButton = $$$(button({
+                            class: 'ui basic button',
+                            style: 'width: 100%; font-size: 0.9em;'
+                        }), 'save as'))
+                    ),
+                    $$(td({style: 'width: 25%'}),
+                        $$(this.renameButton = $$$(button({class: 'ui basic button', style: 'width: 100%'}), 'rename'))
+                    )
+                )
+            ),
         );
 
         this.updateDom();
@@ -160,40 +166,36 @@ class ContextManager {
         }
     }
 
-    storeText(text)
-    {
+    storeText(text) {
         if (this.enkindleController.isLoaded) {
             this.textCollection[this.selectedKey] = text;
             localStorage.textCollection = JSON.stringify(this.textCollection);
         }
     }
 
-    restoreText()
-    {
+    restoreText() {
         return this.textCollection[this.selectedKey];
     }
 
-    storeContext(context){
+    storeContext(context) {
         if (this.enkindleController.isLoaded) {
             this.contextCollection[this.selectedKey] = copy(context);
             localStorage.contextCollection = JSON.stringify(this.contextCollection);
         }
     }
 
-    restoreContext()
-    {
+    restoreContext() {
         return copy(this.contextCollection[this.selectedKey]);
     }
 
-    storeSettings(settings){
+    storeSettings(settings) {
         if (this.enkindleController.isLoaded) {
             this.settings = copy(settings);
             localStorage.settings = JSON.stringify(settings);
         }
     }
 
-    restoreSettings()
-    {
+    restoreSettings() {
         return copy(this.settings);
     }
 
@@ -218,7 +220,7 @@ class ContextManager {
         }
     }
 
-    storeLocalStorage(force){
+    storeLocalStorage(force) {
         if ((this.enkindleController.isLoaded || force) && (typeof(Storage) !== "undefined")) {
             localStorage.selectedKey = this.selectedKey;
             localStorage.textCollection = JSON.stringify(this.textCollection);

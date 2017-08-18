@@ -5,18 +5,6 @@ class EnkindleController {
     constructor() {
         let that = this;
 
-        /*
-        this.position = 0;
-        this.words = 1;
-        this.isPlaying = false;
-
-        this.bookmarks = {};
-
-        this.fontSize = '2.0';
-        this.radius = 20;
-        this.showRadius = true;
-        */
-
         this.dom = $$(div(),
             this.topSegment = $$(div({style: 'position: absolute; top: 2%; left: 5%; width: 90%;'}),
                 this.menuSegment = div(),
@@ -57,7 +45,7 @@ class EnkindleController {
             bookmarks: {}
         };
 
-        this.contextManager = new ContextManager(this, defaultSettings, defaultText, defaultContext);
+        this.contextManager = new LibraryComponent(this, defaultSettings, defaultText, defaultContext);
 
         this.settings = this.contextManager.restoreSettings();
         this.context = this.contextManager.restoreContext();
@@ -92,7 +80,7 @@ class EnkindleController {
         this.lineReaderSegment.appendChild(this.lineReaderComponent.getDom());
 
         this.playerComponent = new PlayerComponent(this);
-        this.playerButtonsSegment.appendChild(this.playerComponent.playerDom);
+        this.playerButtonsSegment.appendChild(this.playerComponent.getDom());
         this.progressSegment.appendChild(this.playerComponent.progressDom);
 
         this.menuComponent.context.nodeValue = this.contextManager.selectedKey;
@@ -102,7 +90,7 @@ class EnkindleController {
 
         this.context = this.contextManager.restoreContext();
         this.lineReaderComponent.changeSpeed(0);
-        this.playerComponent.updatePosition(this.context.position);
+        this.setPosition(this.context.position);
 
         this.restoreText();
         this.restoreContext();
@@ -111,6 +99,7 @@ class EnkindleController {
         this.addTogglePlayEventListeners();
         this.lineReaderComponent.play();
         $(this.settingsComponent.getDom()).toggle();
+
         this.isLoaded = true;
     }
 
@@ -121,10 +110,10 @@ class EnkindleController {
                 that.playerComponent.togglePlay();
             }
         };
-        /*
-        document.body.ontouchend = function (e) {
-            that.playerComponent.togglePlay();
-        };*/
+    }
+
+    getBookmarks() {
+        return this.context.bookmarks;
     }
 
     hasBookmarks() {
@@ -132,8 +121,12 @@ class EnkindleController {
         return (existingBookmarksCount !== 0);
     }
 
+    addBookmarkToContext(label, position) {
+        this.context.bookmarks[label] = position;
+        this.storeContext();
+    }
+
     removeBookmark(label) {
-        console.log('trying to remove bookmark: ' + label);
         delete this.context.bookmarks[label];
 
         if (!(this.hasBookmarks())) {
@@ -144,20 +137,18 @@ class EnkindleController {
     }
 
     setPosition(position) {
-        console.log('trying to set position: ' + position);
-        this.lineReaderComponent.recalculateSpeed();
-        this.playerComponent.updatePosition(position);
+        this.context.position = position;
+        // set slider -> triggering event -> doSetPosition
         this.playerComponent.updateProgressBar();
     }
 
-    addBookmarkToContext(label, position) {
-        this.context.bookmarks[label] = position;
+    doSetPosition(position) {
+        this.context.position = position;
+        this.playerComponent.updateTimeButton();
+        this.lineReaderComponent.refresh(position);
         this.storeContext();
     }
 
-    getBookmarks() {
-        return this.bookmarks;
-    }
 
     setFontSize(fontSize) {
         this.settings.fontSize = fontSize;
@@ -214,9 +205,7 @@ class EnkindleController {
             $(this.bookmarksSegment).toggle();
         }
         this.lineReaderComponent.changeSpeed(0);
-        this.playerComponent.updatePosition(context.position);
-        this.playerComponent.updateProgressBar(context.position);
-        this.playerComponent.refreshTime();
+        this.setPosition(context.position);
     }
 
     storeSettings() {

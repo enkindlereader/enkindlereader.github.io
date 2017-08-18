@@ -1,3 +1,6 @@
+// This file is a part of EnkindleReader project.
+// Copyright (c) 2017 Aleksander Gajewski <adiog@brainfuck.pl>.
+
 class BookmarksComponent {
     constructor(enkindleController) {
         let that = this;
@@ -17,7 +20,7 @@ class BookmarksComponent {
         return this.dom;
     }
 
-    getBookmarkIcons() {
+    static getBookmarkIcons() {
         return [
             'empty heart',
             'heart',
@@ -42,7 +45,7 @@ class BookmarksComponent {
         ];
     }
 
-    addBookmarkCallback(){
+    addBookmarkCallback() {
         let position = this.enkindleController.context.position;
         let existingBookmarks = this.enkindleController.getBookmarks();
         let existingBookmarksCount = Object.keys(existingBookmarks).length;
@@ -52,13 +55,11 @@ class BookmarksComponent {
             $(this.enkindleController.bookmarksSegment).toggle();
         }
 
-        if (existingBookmarksCount > 10)
-        {
+        if (existingBookmarksCount > 10) {
             return;
         }
         let label = this.getRandomLabel();
-        while(label in existingBookmarks)
-        {
+        while (label in existingBookmarks) {
             label = this.getRandomLabel();
         }
 
@@ -67,20 +68,16 @@ class BookmarksComponent {
         this.enkindleController.addBookmarkToContext(label, position);
     }
 
-    refresh()
-    {
-        for(let label in this.enkindleController.context.bookmarks)
-        {
+    refresh() {
+        for (let label in this.enkindleController.context.bookmarks) {
             let position = this.enkindleController.context.bookmarks[label];
             let bookmark = new Bookmark(this.enkindleController, label, position);
             this.enkindleController.bookmarksComponent.getDom().appendChild(bookmark.getDom());
         }
     }
 
-    getRandomLabel(){
-        let randomIndex = Math.floor(Math.random() * this.getBookmarkIcons().length);
-        console.log(randomIndex);
-        console.log(this.getBookmarkIcons()[randomIndex]);
-        return this.getBookmarkIcons()[randomIndex];
+    getRandomLabel() {
+        let randomIndex = Math.floor(Math.random() * BookmarksComponent.getBookmarkIcons().length);
+        return BookmarksComponent.getBookmarkIcons()[randomIndex];
     }
 }

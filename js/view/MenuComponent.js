@@ -21,9 +21,11 @@ class Menu {
         this.bookLoaderButton.addEventListener('click', function () {
             $(that.enkindleController.loaderComponent.getDom()).toggle();
         });
+
         this.libraryLoaderButton.addEventListener('click', function () {
             $(that.enkindleController.contextManager.getDom()).toggle();
         });
+
         this.settingsButton.addEventListener('click', function () {
             $(that.enkindleController.settingsComponent.getDom()).toggle();
         });

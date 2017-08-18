@@ -4,8 +4,6 @@ class SettingsComponent {
 
         this.enkindleController = enkindleController;
 
-        this.isLoaded = false;
-
         this.dom = $$(div({class: 'ui segment', style: 'width: 100%'}),
             $$(table({style: 'width: 100%'}),
                 $$(tr(),
@@ -26,8 +24,10 @@ class SettingsComponent {
         );
 
         this.showRadiusCheckbox.addEventListener('click', function () {
-                that.enkindleController.toggleRadius();
-                that.enkindleController.storeSettings();
+                if (that.enkindleController.isLoaded) {
+                    that.enkindleController.toggleRadius();
+                    that.enkindleController.storeSettings();
+                }
             }
         );
 
@@ -36,23 +36,24 @@ class SettingsComponent {
             max: 50,
             smooth: true,
             onChange: function (value) {
-                that.enkindleController.setFontSize(Math.floor(value) / 10.0);
-                that.enkindleController.storeSettings();
+                if (that.enkindleController.isLoaded) {
+                    that.enkindleController.setFontSize(Math.floor(value) / 10.0);
+                    that.enkindleController.storeSettings();
+                }
             }
         });
-
 
         $(this.visibelRadiusSlider).range({
             min: 0,
             max: 60,
             smooth: true,
             onChange: function (value) {
-                that.enkindleController.setRadius(Math.floor(value));
-                that.enkindleController.storeSettings();
+                if (that.enkindleController.isLoaded) {
+                    that.enkindleController.setRadius(Math.floor(value));
+                    that.enkindleController.storeSettings();
+                }
             }
         });
-
-        this.isLoaded = true;
     }
 
     getDom() {

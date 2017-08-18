@@ -129,7 +129,7 @@ class LineReaderComponent {
 
         if ((this.enkindleController.isPlaying) && (this.enkindleController.position < this.textArray.length)) {
             this.enkindleController.position += 1;
-            this.enkindleController.playerComponent.updateProgressBar();
+            this.enkindleController.doSetPosition(this.enkindleController.position);
             this.refresh(this.enkindleController.position);
             this.enkindleController.playerComponent.updateTimeButton();
             setTimeout(function () {
