@@ -24,7 +24,7 @@ class PlayerComponent {
 
         this.redrawProgressBar();
         this.fastBackwardButton.addEventListener('click', function () {
-            that.enkindleController.position = 0;
+            that.enkindleController.context.position = 0;
             that.updateProgressBar();
         });
 
