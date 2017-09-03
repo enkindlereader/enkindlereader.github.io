@@ -64,7 +64,7 @@ class LineReaderComponent {
         if (position < this.textArray.length) {
             this.enkindleController.context.position = position;
 
-            console.log(this.enkindleController.position);
+            //console.log(this.enkindleController.position);
             console.log(this.enkindleController.context.position);
 
             let leadingLetters = this.enkindleController.settings.radius;
@@ -127,10 +127,10 @@ class LineReaderComponent {
     play() {
         let that = this;
 
-        if ((this.enkindleController.isPlaying) && (this.enkindleController.position < this.textArray.length)) {
-            this.enkindleController.position += 1;
+        if ((this.enkindleController.isPlaying) && (this.enkindleController.context.position < this.textArray.length)) {
+            this.enkindleController.context.position += 1;
             this.enkindleController.playerComponent.updateProgressBar();
-            this.refresh(this.enkindleController.position);
+            this.refresh(this.enkindleController.context.position);
             this.enkindleController.playerComponent.updateTimeButton();
             setTimeout(function () {
                 that.play();
