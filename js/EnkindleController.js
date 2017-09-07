@@ -34,9 +34,9 @@ class EnkindleController {
             'This evening, however, on coming out into the street, he became acutely aware of his fears.';
 
         let defaultSettings = {
-            fontSize: 2.0,
-            showRadius: true,
-            radius: 30
+            fontSize: 4.0,
+            showRadius: false,
+            radius: 10
         };
 
         let defaultContext = {
@@ -160,7 +160,7 @@ class EnkindleController {
     setRadius(radius) {
         this.settings.radius = radius;
         if (this.lineReaderComponent) {
-            this.lineReaderComponent.refresh(this.position);
+            this.lineReaderComponent.refresh(this.context.position);
         }
     }
 
