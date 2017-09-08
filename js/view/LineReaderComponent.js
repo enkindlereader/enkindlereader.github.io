@@ -5,7 +5,11 @@ class LineReaderComponent {
     constructor(enkindleController) {
         this.enkindleController = enkindleController;
 
-        this.dom = $$(div({style: 'position: absolute; z-index: -1; top: 40%; left: 10%; width: 80%; font-family: monospace; padding: 0.5em; border-top: 1px solid black; border-bottom: 1px solid black;'}),
+        this.dom = $$(div({style: 'position: absolute; z-index: -1; top: 40%; left: 10%; width: 80%; font-family: monospace; padding: 0.5em; border-top: 1px solid black; border-bottom: 1px solid black;' +
+            'color: lightgray;' +
+            'text-overflow: ellipsis;' +
+            'white-space: nowrap;' +
+            'overflow: hidden;'}),
             this.leadingLetters = span({style: 'color: lightgray;'}),
             this.leadingWord = span({style: 'color: black;'}),
             this.centerLetter = span({style: 'color: darkorange;'}),
