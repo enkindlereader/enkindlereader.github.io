@@ -67,7 +67,7 @@ class PlayerComponent {
 
     updateTimeButton() {
         let secs = this.enkindleController.lineReaderComponent.textArray.length / this.enkindleController.context.speed * 60;
-        let currentSecond = this.enkindleController.position / this.enkindleController.context.speed * 60;
+        let currentSecond = this.enkindleController.context.position / this.enkindleController.context.speed * 60;
         this.timeLabel.innerHTML = Math.round(currentSecond) + '/' + Math.round(secs) + 's';
     }
 
