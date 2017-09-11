@@ -47,6 +47,11 @@ class PlayerComponent {
 
     togglePlay() {
         this.enkindleController.isPlaying = !this.enkindleController.isPlaying;
+        if (this.enkindleController.isPlaying) {
+            this.enkindleController.toggleRadius(this.enkindleController.settings.showRadius);
+        } else {
+            this.enkindleController.doToggleRadius(true);
+        }
         this.enkindleController.storeContext();
     }
 

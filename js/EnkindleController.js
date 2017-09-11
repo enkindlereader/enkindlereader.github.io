@@ -36,7 +36,7 @@ class EnkindleController {
         let defaultSettings = {
             fontSize: 4.0,
             showRadius: false,
-            radius: 10
+            radius: 15
         };
 
         let defaultContext = {
@@ -101,6 +101,7 @@ class EnkindleController {
         $(this.settingsComponent.getDom()).toggle();
 
         this.isLoaded = true;
+        this.doToggleRadius(true);
     }
 
     addTogglePlayEventListeners() {
@@ -159,6 +160,7 @@ class EnkindleController {
 
     setRadius(radius) {
         this.settings.radius = radius;
+        console.log(radius);
         if (this.lineReaderComponent) {
             this.lineReaderComponent.refresh(this.context.position);
         }
@@ -171,8 +173,12 @@ class EnkindleController {
         else {
             this.settings.showRadius = showRadius;
         }
+        this.doToggleRadius(this.settings.showRadius);
+    }
+
+    doToggleRadius(showRadius) {
         if (this.lineReaderComponent) {
-            if (this.settings.showRadius) {
+            if (showRadius) {
                 this.lineReaderComponent.leadingLetters.style.visibility = 'visible';
                 this.lineReaderComponent.trailingLetters.style.visibility = 'visible';
             }
